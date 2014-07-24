@@ -6,11 +6,18 @@ GLWidget::GLWidget(QWidget *parent) :
 {
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     timer.start(16);
+
+// scale and offset is set here
+    s = 2;   // scale for object   (1/s is size)
+    zo = -1; // offset for z coord (- is away from user)
+    yo = 0;
+    xo = 0;
+
 }
 
 void GLWidget::initializeGL(){
-// background color
-    glClearColor(1, 1, 1, 1);
+// background color (sky-ish blue is (.5, .5, .9, 1)
+    glClearColor(.5, .5, .9, 1);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHT0);
@@ -22,7 +29,8 @@ void GLWidget::initializeGL(){
 // the rendering happens here
 void GLWidget::paintGL(){
 
-    objloader a ("torus.obj");
+
+    objloader a ("plane.obj");
     objloader::triangle * tcurrent = a.list;
 
 
@@ -32,13 +40,16 @@ void GLWidget::paintGL(){
 
     glColor3f(1,0,0);
 
+//normals need to be calculated
+
+
     while(tcurrent->next != NULL)
     {
-        glColor3f(.4, .4, 0);
+        glColor3f(.4, .4, .4);
         glBegin(GL_TRIANGLES);
-            glVertex3f(tcurrent->A.x, tcurrent->A.y, tcurrent->A.z);
-            glVertex3f(tcurrent->B.x, tcurrent->B.y, tcurrent->B.z);
-            glVertex3f(tcurrent->C.x, tcurrent->C.y, tcurrent->C.z);
+            glVertex3f(tcurrent->A.x/s + xo, tcurrent->A.y/s + yo, tcurrent->A.z/s + zo);
+            glVertex3f(tcurrent->B.x/s + xo, tcurrent->B.y/s + yo, tcurrent->B.z/s + zo);
+            glVertex3f(tcurrent->C.x/s + xo, tcurrent->C.y/s + yo, tcurrent->C.z/s + zo);
         glEnd();
 
         tcurrent = tcurrent->next;

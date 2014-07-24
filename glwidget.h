@@ -16,6 +16,14 @@ public:
 
 private:
     QTimer timer;
+
+private:
+    float s;  // scale for object   (1/s is size)
+public:
+    float zo; // offset for z coord (- is away from user)
+    float yo;
+    float xo;
+
 };
 
 #endif // GLWIDGET_H
